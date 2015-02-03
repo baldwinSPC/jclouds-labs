@@ -17,14 +17,13 @@
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
 import org.jclouds.date.DateCodecFactory;
-import org.jclouds.profitbricks.binder.BaseProfitBricksRequestBinder;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
 import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
 public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
+
     protected LoadBalancer.Builder builder;
 
     protected BaseLoadBalancerResponseHandler(DateCodecFactory dateCodec) {
@@ -38,7 +37,7 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
             builder.loadBalancerId(textToStringValue());
         else if ("loadBalancerName".equals(qName))
             builder.loadBalancerName(textToStringValue());
-        else if ("LoadBalancerAlgorithm".equals(qName))
+        else if ("loadBalancerAlgorithm".equals(qName))
             builder.loadBalancerAlgorithm(LoadBalancerAlgorithm.fromValue(textToStringValue()));
         else if ("dataCenterId".equals(qName))
             builder.dataCenterId(textToStringValue());
@@ -52,8 +51,8 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
             builder.lanId(textToStringValue());
         else if ("provisioningState".equals(qName))
             builder.provisioningState(ProvisioningState.fromValue(textToStringValue()));
-        else if ("creationDate".equals(qName))
-            builder.creationDate(textToIso8601Date());
+        else if ("creationTime".equals(qName))
+            builder.creationTime(textToIso8601Date());
         else if ("lastModificationTime".equals(qName))
             builder.lastModificationTime(textToIso8601Date());
     }

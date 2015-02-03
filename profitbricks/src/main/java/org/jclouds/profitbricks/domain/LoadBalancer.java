@@ -17,6 +17,7 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 
 import java.util.Date;
 
@@ -41,6 +42,7 @@ public abstract class LoadBalancer {
 
     public abstract ProvisioningState provisioningState();
 
+    @Nullable
     public abstract Date creationTime();
 
     public abstract Date lastModificationTime();
@@ -75,7 +77,8 @@ public abstract class LoadBalancer {
 
         public ProvisioningState provisioningState;
 
-        public Date creationDate;
+        @Nullable
+        public Date creationTime;
 
         public Date lastModificationTime;
 
@@ -119,8 +122,8 @@ public abstract class LoadBalancer {
             return this;
         }
 
-        public Builder creationDate(Date creationDate) {
-            this.creationDate = creationDate;
+        public Builder creationTime(Date creationTime) {
+            this.creationTime = creationTime;
             return this;
         }
 
@@ -135,13 +138,13 @@ public abstract class LoadBalancer {
         }
 
         public LoadBalancer build() {
-            return LoadBalancer.create(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationDate, lastModificationTime);
+            return LoadBalancer.create(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime);
         }
 
         public Builder fromLoadBalancer(LoadBalancer in) {
             return this.loadBalancerId(in.loadBalancerId()).loadBalancerName(in.loadBalancerName()).loadBalancerAlgorithm(in.loadBalancerAlgorithm())
                     .dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion()).internetAccess(in.internetAccess())
-                    .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationDate(in.creationTime()).lastModificationTime(in.lastModificationTime());
+                    .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime());
         }
     }
 }

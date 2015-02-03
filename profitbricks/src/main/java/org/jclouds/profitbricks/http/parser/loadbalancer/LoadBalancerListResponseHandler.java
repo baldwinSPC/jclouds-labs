@@ -16,30 +16,36 @@
  */
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
+import autovalue.shaded.com.google.common.common.collect.Lists;
+import com.google.inject.Inject;
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.xml.sax.SAXException;
 
-public class LoadBalancerListResponseHandler extends BaseLoadBalancerResponseHandler<LoadBalancer> {
+import java.util.List;
 
-    private boolean done = false;
+public class LoadBalancerListResponseHandler extends BaseLoadBalancerResponseHandler<List<LoadBalancer>> {
 
+    private final List<LoadBalancer> loadBalancers;
+
+    @Inject
     protected LoadBalancerListResponseHandler(DateCodecFactory dateCodec) {
         super(dateCodec);
+        this.loadBalancers = Lists.newArrayList();
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done)
-            return;
         setPropertyOnEndTag(qName);
-        if ("return".equals(qName))
-            done = true;
+        if ("return".equals(qName)) {
+            loadBalancers.add(builder.build());
+            builder = LoadBalancer.builder();
+        }
         clearTextBuffer();
     }
 
     @Override
-    public LoadBalancer getResult() {
-        return builder.build();
+    public List<LoadBalancer> getResult() {
+        return loadBalancers;
     }
 }
