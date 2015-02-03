@@ -14,19 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.domain;
+package org.jclouds.profitbricks.http.parser.loadbalancer;
 
-public enum LoadBalancerAlgorithm {
+import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.domain.LoadBalancer;
+import org.xml.sax.SAXException;
 
-    ROUND_ROBIN, UNRECOGNIZED;
+public class LoadBalancerListResponseHandler extends BaseLoadBalancerResponseHandler<LoadBalancer> {
 
-    public static LoadBalancerAlgorithm
+    private boolean done = false;
 
-    fromValue(String value) {
-        try {
-            return valueOf(value);
-        } catch (IllegalArgumentException e) {
-            return UNRECOGNIZED;
-        }
+    protected LoadBalancerListResponseHandler(DateCodecFactory dateCodec) {
+        super(dateCodec);
+    }
+
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        if (done)
+            return;
+        setPropertyOnEndTag(qName);
+        if ("return".equals(qName))
+            done = true;
+        clearTextBuffer();
+    }
+
+    @Override
+    public LoadBalancer getResult() {
+        return builder.build();
     }
 }
