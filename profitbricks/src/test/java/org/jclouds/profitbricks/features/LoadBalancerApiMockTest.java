@@ -16,6 +16,7 @@
  */
 package org.jclouds.profitbricks.features;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -42,9 +43,33 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
         try {
             List<LoadBalancer> loadBalancerList = api.getAllLoadBalancers();
 
+            assertRequestHasCommonProperties(server.takeRequest());
             assertNotNull(loadBalancerList);
-            assertTrue(loadBalancerList.size()==2);
+            assertTrue(loadBalancerList.size() == 2);
 
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testGetServer() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        LoadBalancerApi api = pbApi.loadBalancerApi();
+
+        String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+
+        String content = " <ws:getLoadBalancer><loadBalancerId>" + id + "</loadBalancerId></ws:getLoadBalancer>";
+        try {
+            LoadBalancer loadBalancer = api.getLoadBalancer(id);
+
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertNotNull(loadBalancer);
+            assertEquals(loadBalancer.loadBalancerId(), id);
         } finally {
             pbApi.close();
             server.shutdown();

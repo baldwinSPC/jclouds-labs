@@ -21,8 +21,10 @@ import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerListResponseHandler;
+import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Payload;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.XMLResponseParser;
 
@@ -44,4 +46,11 @@ public interface LoadBalancerApi {
     @XMLResponseParser(LoadBalancerListResponseHandler.class)
     @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
     List<LoadBalancer> getAllLoadBalancers();
+
+    @POST
+    @Named("loadbalancer:get")
+    @Payload(" <ws:getLoadBalancer><loadBalancerId>{id}</loadBalancerId></ws:getLoadBalancer>")
+    @XMLResponseParser(LoadBalancerResponseHandler.class)
+    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+    LoadBalancer getLoadBalancer(@PayloadParam("id") String identifier);
 }
