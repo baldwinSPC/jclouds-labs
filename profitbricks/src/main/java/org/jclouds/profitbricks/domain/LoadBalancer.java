@@ -24,22 +24,31 @@ import java.util.Date;
 @AutoValue
 public abstract class LoadBalancer {
 
+    @Nullable
     public abstract String loadBalancerId();
 
+    @Nullable
     public abstract String loadBalancerName();
 
+    @Nullable
     public abstract LoadBalancerAlgorithm loadBalancerAlgorithm();
 
+    @Nullable
     public abstract String dataCenterId();
 
+    @Nullable
     public abstract String dataCenterVersion();
 
+    @Nullable
     public abstract boolean internetAccess();
 
+    @Nullable
     public abstract String ip();
 
+    @Nullable
     public abstract String lanId();
 
+    @Nullable
     public abstract ProvisioningState provisioningState();
 
     @Nullable
@@ -145,6 +154,76 @@ public abstract class LoadBalancer {
             return this.loadBalancerId(in.loadBalancerId()).loadBalancerName(in.loadBalancerName()).loadBalancerAlgorithm(in.loadBalancerAlgorithm())
                     .dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion()).internetAccess(in.internetAccess())
                     .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime());
+        }
+    }
+
+    public static final class Request {
+        public static CreatePayload.Builder creatingBuilder() {
+            return new CreatePayload.Builder();
+        }
+
+        @AutoValue
+        public abstract static class CreatePayload {
+            public abstract String dataCenterId();
+
+            public abstract String loadBalancerName();
+
+            public abstract LoadBalancerAlgorithm loadBalancerAlgorithm();
+
+            public abstract String ip();
+
+            @Nullable
+            public abstract String lanId();
+
+            @Nullable
+            public abstract String serverIds();
+
+            public static CreatePayload create(String dataCenterId, String loadBalancerName, LoadBalancerAlgorithm loadBalancerAlgorithm, String ip, String lanId, String serverIds) {
+                return new AutoValue_LoadBalancer_Request_CreatePayload(dataCenterId, loadBalancerName, loadBalancerAlgorithm, ip, lanId, serverIds);
+            }
+
+            public static class Builder {
+                public String dataCenterId;
+                public String loadBalancerName;
+                public LoadBalancerAlgorithm loadBalancerAlgorithm;
+                public String ip;
+                public String lanId;
+                public String serverIds;
+
+                public Builder dataCenterId(String dataCenterId) {
+                    this.dataCenterId = dataCenterId;
+                    return this;
+                }
+
+                public Builder loadBalancerName(String loadBalancerName) {
+                    this.loadBalancerName = loadBalancerName;
+                    return this;
+                }
+
+                public Builder loadBalancerAlgorithm(LoadBalancerAlgorithm loadBalancerAlgorithm) {
+                    this.loadBalancerAlgorithm = loadBalancerAlgorithm;
+                    return this;
+                }
+
+                public Builder ip(String ip) {
+                    this.ip = ip;
+                    return this;
+                }
+
+                public Builder lanId(String lanId) {
+                    this.lanId = lanId;
+                    return this;
+                }
+
+                public Builder serverIds(String serverIds) {
+                    this.serverIds = serverIds;
+                    return this;
+                }
+
+                public CreatePayload build() {
+                    return CreatePayload.create(dataCenterId, loadBalancerName, loadBalancerAlgorithm, ip, lanId, serverIds);
+                }
+            }
         }
     }
 }

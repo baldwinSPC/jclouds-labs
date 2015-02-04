@@ -257,7 +257,7 @@ public abstract class Server implements ServerCommonProperties {
          public abstract OsType osType();
 
          public static CreatePayload create( String dataCenterId, String name, int core, int ram ) {
-            return create( dataCenterId, name, core, ram, "", "", null, false, null, null, null, null, null, null, null, null );
+              return create( dataCenterId, name, core, ram, "", "", null, false, null, null, null, null, null, null, null, null );
          }
 
          public static CreatePayload create( String dataCenterId, String name, int cores, int ram, String bootFromStorageId, String bootFromImageId,

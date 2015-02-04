@@ -24,6 +24,7 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.LoadBalancer;
+import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
@@ -54,7 +55,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
     }
 
     @Test
-    public void testGetServer() throws Exception {
+    public void testGetLoadBalancer() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer.xml")));
 
@@ -63,13 +64,50 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
 
         String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
 
-        String content = " <ws:getLoadBalancer><loadBalancerId>" + id + "</loadBalancerId></ws:getLoadBalancer>";
+        String content = "<ws:getLoadBalancer><loadBalancerId>" + id + "</loadBalancerId></ws:getLoadBalancer>";
         try {
             LoadBalancer loadBalancer = api.getLoadBalancer(id);
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(loadBalancer);
             assertEquals(loadBalancer.loadBalancerId(), id);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testCreateLoadBalancer() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        LoadBalancerApi api = pbApi.loadBalancerApi();
+
+        String content = " <ws:createLoadBalancer>" +
+                "<request>" +
+                "<dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>" +
+                "<loadBalancerName>load-balancer-name</loadBalancerName>" +
+                "<loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>" +
+                "<ip>-ip</ip>" +
+                "<lanId>lan-id</lanId>" +
+                "<serverIds>server-ids</serverIds>" +
+                "</request>" +
+                "</ws:createLoadBalancer>";
+
+        try {
+            LoadBalancer loadBalancer = api.createLoadBalancer(LoadBalancer.Request.creatingBuilder()
+                    .dataCenterId("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                    .loadBalancerName("load-balancer-name")
+                    .loadBalancerAlgorithm(LoadBalancerAlgorithm.ROUND_ROBIN)
+                    .ip("-ip")
+                    .serverIds("server-ids")
+                    .lanId("lan-id")
+                    .build());
+
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+
         } finally {
             pbApi.close();
             server.shutdown();

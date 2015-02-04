@@ -16,24 +16,27 @@
  */
 package org.jclouds.profitbricks.features;
 
-import org.jclouds.Fallbacks;
-import org.jclouds.http.filters.BasicAuthentication;
-import org.jclouds.profitbricks.domain.LoadBalancer;
-import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
-import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerListResponseHandler;
-import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerResponseHandler;
-import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.Payload;
-import org.jclouds.rest.annotations.PayloadParam;
-import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.XMLResponseParser;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import org.jclouds.Fallbacks;
+import org.jclouds.http.filters.BasicAuthentication;
+import org.jclouds.profitbricks.binder.loadbalancer.CreateLoadBalancerRequestBinder;
+import org.jclouds.profitbricks.domain.LoadBalancer;
+import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
+import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerListResponseHandler;
+import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerResponseHandler;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.Payload;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.XMLResponseParser;
+
+
 
 @RequestFilters({BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class})
 @Consumes(MediaType.TEXT_XML)
@@ -49,8 +52,14 @@ public interface LoadBalancerApi {
 
     @POST
     @Named("loadbalancer:get")
-    @Payload(" <ws:getLoadBalancer><loadBalancerId>{id}</loadBalancerId></ws:getLoadBalancer>")
+    @Payload("<ws:getLoadBalancer><loadBalancerId>{id}</loadBalancerId></ws:getLoadBalancer>")
     @XMLResponseParser(LoadBalancerResponseHandler.class)
     @Fallback(Fallbacks.NullOnNotFoundOr404.class)
     LoadBalancer getLoadBalancer(@PayloadParam("id") String identifier);
+
+    @POST
+    @Named("loadbalancer:create")
+    @MapBinder(CreateLoadBalancerRequestBinder.class)
+    @XMLResponseParser(LoadBalancerResponseHandler.class)
+    LoadBalancer createLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.CreatePayload payload);
 }
