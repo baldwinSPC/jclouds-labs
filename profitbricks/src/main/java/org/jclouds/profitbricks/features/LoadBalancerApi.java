@@ -25,6 +25,7 @@ import java.util.List;
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.loadbalancer.CreateLoadBalancerRequestBinder;
+import org.jclouds.profitbricks.binder.loadbalancer.RegisterLoadBalancerRequestBinder;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerListResponseHandler;
@@ -35,8 +36,6 @@ import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.XMLResponseParser;
-
-
 
 @RequestFilters({BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class})
 @Consumes(MediaType.TEXT_XML)
@@ -62,11 +61,11 @@ public interface LoadBalancerApi {
     @MapBinder(CreateLoadBalancerRequestBinder.class)
     @XMLResponseParser(LoadBalancerResponseHandler.class)
     LoadBalancer createLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.CreatePayload payload);
-    
-        @POST
+
+    @POST
     @Named("loadbalancer:register")
     @MapBinder(RegisterLoadBalancerRequestBinder.class)
     @XMLResponseParser(LoadBalancerResponseHandler.class)
-        LoadBalancer registerLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.RegisterPayload payload);
-    
+    LoadBalancer registerLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.RegisterPayload payload);
+
 }

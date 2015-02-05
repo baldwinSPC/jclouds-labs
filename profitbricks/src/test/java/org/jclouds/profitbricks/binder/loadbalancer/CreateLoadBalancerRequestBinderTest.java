@@ -27,7 +27,7 @@ public class CreateLoadBalancerRequestBinderTest {
     @Test
     public void testCreatePayload() {
         CreateLoadBalancerRequestBinder binder = new CreateLoadBalancerRequestBinder();
-        
+
         String actual = binder.createPayload(LoadBalancer.Request.CreatePayload.create("datacenter-id", "load-balancer-name", LoadBalancerAlgorithm.ROUND_ROBIN, "-ip", "lan-id", "server-ids"));
 
         assertNotNull(actual, "Binder returned null payload");

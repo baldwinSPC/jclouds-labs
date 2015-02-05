@@ -55,6 +55,7 @@ public abstract class LoadBalancer {
     @Nullable
     public abstract Date creationTime();
 
+    @Nullable
     public abstract Date lastModificationTime();
 
     public static LoadBalancer create(String loadBalancerId, String loadBalancerName, LoadBalancerAlgorithm loadBalancerAlgorithm,

@@ -1,0 +1,11 @@
+<soapenv:Envelope
+  xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'
+  xmlns:ws='http://ws.api.profitbricks.com/'>
+    <soapenv:Header />
+    <soapenv:Body>
+        <ws:registerServersOnLoadBalancer>
+                <serverIds>server-ids</serverIds>
+                <loadBalancerId>load-balancer-id</loadBalancerId>
+        </ws:registerServersOnLoadBalancer>
+    </soapenv:Body>
+</soapenv:Envelope>

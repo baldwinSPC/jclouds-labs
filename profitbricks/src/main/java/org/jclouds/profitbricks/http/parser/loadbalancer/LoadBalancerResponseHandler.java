@@ -29,7 +29,7 @@ public class LoadBalancerResponseHandler extends BaseLoadBalancerResponseHandler
     LoadBalancerResponseHandler(DateCodecFactory dateCodec) {
         super(dateCodec);
     }
-
+            
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (done)
             return;

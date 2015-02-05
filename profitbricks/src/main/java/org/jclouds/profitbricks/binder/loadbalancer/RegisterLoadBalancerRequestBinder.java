@@ -38,6 +38,6 @@ public class RegisterLoadBalancerRequestBinder extends BaseProfitBricksRequestBi
         requestBuilder.append(format("<loadBalancerId>%s</loadBalancerId>", payload.loadBalancerId()))
                 .append("</ws:registerServersOnLoadBalancer>");
         
-        return requestBuilder.toString();
+        return requestBuilder.toString().replaceAll("\\s+", "");
     }
 }
