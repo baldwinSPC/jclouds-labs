@@ -30,7 +30,7 @@ public class CreateLoadBalancerRequestBinder extends BaseProfitBricksRequestBind
     }
 
     protected String createPayload(LoadBalancer.Request.CreatePayload payload) {
-        requestBuilder.append(" <ws:createLoadBalancer>")
+        requestBuilder.append("<ws:createLoadBalancer>")
                 .append("<request>")
                 .append(format("<dataCenterId>%s</dataCenterId>", payload.dataCenterId()))
                 .append(format("<loadBalancerName>%s</loadBalancerName>", payload.loadBalancerName()))

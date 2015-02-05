@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class RegisterLoadBalancerRequestBinderTest {
 
     @Test
-    public void testCreatePayload() {
+    public void testRegisterPayload() {
         RegisterLoadBalancerRequestBinder binder = new RegisterLoadBalancerRequestBinder();
         List<String> serverIds = Lists.newArrayList();
         serverIds.add("1");
