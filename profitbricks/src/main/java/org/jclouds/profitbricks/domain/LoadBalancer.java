@@ -20,6 +20,7 @@ import com.google.auto.value.AutoValue;
 import org.jclouds.javax.annotation.Nullable;
 
 import java.util.Date;
+import java.util.List;
 
 @AutoValue
 public abstract class LoadBalancer {
@@ -57,8 +58,8 @@ public abstract class LoadBalancer {
     public abstract Date lastModificationTime();
 
     public static LoadBalancer create(String loadBalancerId, String loadBalancerName, LoadBalancerAlgorithm loadBalancerAlgorithm,
-                                      String dataCenterId, String dataCenterVersion, boolean internetAccess,
-                                      String ip, String lanId, ProvisioningState provisioningState, Date creationTime, Date lastModificationTime) {
+            String dataCenterId, String dataCenterVersion, boolean internetAccess,
+            String ip, String lanId, ProvisioningState provisioningState, Date creationTime, Date lastModificationTime) {
         return new AutoValue_LoadBalancer(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime);
     }
 
@@ -158,12 +159,14 @@ public abstract class LoadBalancer {
     }
 
     public static final class Request {
+
         public static CreatePayload.Builder creatingBuilder() {
             return new CreatePayload.Builder();
         }
 
         @AutoValue
         public abstract static class CreatePayload {
+
             public abstract String dataCenterId();
 
             public abstract String loadBalancerName();
@@ -183,6 +186,7 @@ public abstract class LoadBalancer {
             }
 
             public static class Builder {
+
                 public String dataCenterId;
                 public String loadBalancerName;
                 public LoadBalancerAlgorithm loadBalancerAlgorithm;
@@ -222,6 +226,38 @@ public abstract class LoadBalancer {
 
                 public CreatePayload build() {
                     return CreatePayload.create(dataCenterId, loadBalancerName, loadBalancerAlgorithm, ip, lanId, serverIds);
+                }
+            }
+        }
+
+        @AutoValue
+        public abstract static class RegisterPayload {
+
+            public abstract List<String> serverIds();
+
+            public abstract String loadBalancerId();
+
+            public static RegisterPayload create(List<String> serverIds, String loadBalancerId) {
+                return new AutoValue_LoadBalancer_Request_RegisterPayload(serverIds, loadBalancerId);
+            }
+
+            public static class Builder {
+
+                public List<String> serverIds;
+                public String loadBalancerId;
+
+                public Builder serverIds(List<String> serverIds) {
+                    this.serverIds = serverIds;
+                    return this;
+                }
+
+                public Builder loadBalancerId(String loadBalancerId) {
+                    this.loadBalancerId = loadBalancerId;
+                    return this;
+                }
+
+                public RegisterPayload build() {
+                    return RegisterPayload.create(serverIds, loadBalancerId);
                 }
             }
         }

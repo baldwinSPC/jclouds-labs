@@ -62,4 +62,11 @@ public interface LoadBalancerApi {
     @MapBinder(CreateLoadBalancerRequestBinder.class)
     @XMLResponseParser(LoadBalancerResponseHandler.class)
     LoadBalancer createLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.CreatePayload payload);
+    
+        @POST
+    @Named("loadbalancer:register")
+    @MapBinder(RegisterLoadBalancerRequestBinder.class)
+    @XMLResponseParser(LoadBalancerResponseHandler.class)
+        LoadBalancer registerLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.RegisterPayload payload);
+    
 }
