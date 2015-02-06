@@ -75,4 +75,10 @@ public interface LoadBalancerApi {
     @XMLResponseParser(LoadBalancerResponseHandler.class)
     LoadBalancer deregisterLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.DeregisterPayload payload);
 
+    
+      @POST
+   @Named( "server:delete" )
+   @Payload( "<loadBalancerId>{id}</loadBalancerId>" )
+   @Fallback( Fallbacks.FalseOnNotFoundOr404.class )
+   boolean deleteLoadbalancer( @PayloadParam( "id" ) String id );
 }

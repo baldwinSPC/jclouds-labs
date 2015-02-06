@@ -98,7 +98,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
                 + "</ws:createLoadBalancer>";
 
         try {
-       
+
             LoadBalancer loadbalancer = api.createLoadBalancer(LoadBalancer.Request.CreatePayload.create("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeeee", "load-balancer-name",
                     LoadBalancerAlgorithm.ROUND_ROBIN, "-ip", "lan-id", "server-ids"));
 
@@ -158,6 +158,29 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
             LoadBalancer loadbalancer = api.registerLoadBalancer(LoadBalancer.Request.RegisterPayload.create(serverIds, "load-balancer-id"));
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeleteLoadBalancer() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer-register.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        LoadBalancerApi api = pbApi.loadBalancerApi();
+
+        String loadBalancerId = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+
+        String content = "<loadBalancerId>" + loadBalancerId + "</loadBalancerId>";
+
+        try {
+            boolean done = api.deleteLoadbalancer(loadBalancerId);
+
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(done);
         } finally {
             pbApi.close();
             server.shutdown();
