@@ -262,5 +262,37 @@ public abstract class LoadBalancer {
                 }
             }
         }
+        
+         @AutoValue
+        public abstract static class DeregisterPayload {
+
+            public abstract List<String> serverIds();
+
+            public abstract String loadBalancerId();
+
+            public static DeregisterPayload create(List<String> serverIds, String loadBalancerId) {
+                return new AutoValue_LoadBalancer_Request_DeregisterPayload(serverIds, loadBalancerId);
+            }
+
+            public static class Builder {
+
+                public List<String> serverIds;
+                public String loadBalancerId;
+
+                public Builder serverIds(List<String> serverIds) {
+                    this.serverIds = serverIds;
+                    return this;
+                }
+
+                public Builder loadBalancerId(String loadBalancerId) {
+                    this.loadBalancerId = loadBalancerId;
+                    return this;
+                }
+
+                public DeregisterPayload build() {
+                    return DeregisterPayload.create(serverIds, loadBalancerId);
+                }
+            }
+        }
     }
 }

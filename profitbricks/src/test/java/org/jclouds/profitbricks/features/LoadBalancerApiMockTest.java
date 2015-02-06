@@ -86,9 +86,9 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         LoadBalancerApi api = pbApi.loadBalancerApi();
 
-        String content = " <ws:createLoadBalancer>"
+        String content = "<ws:createLoadBalancer>"
                 + "<request>"
-                + "<dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>"
+                + "<dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeeee</dataCenterId>"
                 + "<loadBalancerName>load-balancer-name</loadBalancerName>"
                 + "<loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>"
                 + "<ip>-ip</ip>"
@@ -98,19 +98,39 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
                 + "</ws:createLoadBalancer>";
 
         try {
-            LoadBalancer loadBalancer = api.createLoadBalancer(LoadBalancer.Request.creatingBuilder()
-                    .dataCenterId("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
-                    .loadBalancerName("load-balancer-name")
-                    .loadBalancerAlgorithm(LoadBalancerAlgorithm.ROUND_ROBIN)
-                    .ip("-ip")
-                    .serverIds("server-ids")
-                    .lanId("lan-id")
-                    .build());
-            LoadBalancer loadbalancer = api.createLoadBalancer(LoadBalancer.Request.CreatePayload.create("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee", "load-balancer-name",
+       
+            LoadBalancer loadbalancer = api.createLoadBalancer(LoadBalancer.Request.CreatePayload.create("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeeee", "load-balancer-name",
                     LoadBalancerAlgorithm.ROUND_ROBIN, "-ip", "lan-id", "server-ids"));
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
 
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeregisterLoadBalancer() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer-deregister.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        LoadBalancerApi api = pbApi.loadBalancerApi();
+
+        String content = "<ws:deregisterServersOnLoadBalancer>"
+                + "<serverIds>1</serverIds>"
+                + "<serverIds>2</serverIds>"
+                + "<loadBalancerId>load-balancer-id</loadBalancerId>"
+                + "</ws:deregisterServersOnLoadBalancer>";
+
+        try {
+            List<String> serverIds = Lists.newArrayList();
+            serverIds.add("1");
+            serverIds.add("2");
+            LoadBalancer loadbalancer = api.deregisterLoadBalancer(LoadBalancer.Request.DeregisterPayload.create(serverIds, "load-balancer-id"));
+
+            assertRequestHasCommonProperties(server.takeRequest(), content);
         } finally {
             pbApi.close();
             server.shutdown();
@@ -126,7 +146,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
         LoadBalancerApi api = pbApi.loadBalancerApi();
 
         String content = "<ws:registerServersOnLoadBalancer>"
-                + "<serverIds>1</serverIds>" 
+                + "<serverIds>1</serverIds>"
                 + "<serverIds>2</serverIds>"
                 + "<loadBalancerId>load-balancer-id</loadBalancerId>"
                 + "</ws:registerServersOnLoadBalancer>";

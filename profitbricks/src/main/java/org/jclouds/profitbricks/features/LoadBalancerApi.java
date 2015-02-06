@@ -25,6 +25,7 @@ import java.util.List;
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.loadbalancer.CreateLoadBalancerRequestBinder;
+import org.jclouds.profitbricks.binder.loadbalancer.DeregisterLoadBalancerRequestBinder;
 import org.jclouds.profitbricks.binder.loadbalancer.RegisterLoadBalancerRequestBinder;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
@@ -67,5 +68,11 @@ public interface LoadBalancerApi {
     @MapBinder(RegisterLoadBalancerRequestBinder.class)
     @XMLResponseParser(LoadBalancerResponseHandler.class)
     LoadBalancer registerLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.RegisterPayload payload);
+    
+    @POST
+    @Named("loadbalancer:Deregister")
+    @MapBinder(DeregisterLoadBalancerRequestBinder.class)
+    @XMLResponseParser(LoadBalancerResponseHandler.class)
+    LoadBalancer deregisterLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.DeregisterPayload payload);
 
 }
