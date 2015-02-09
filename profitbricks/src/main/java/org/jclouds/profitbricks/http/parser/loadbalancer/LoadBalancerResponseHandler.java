@@ -16,27 +16,65 @@
  */
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import java.util.List;
 import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.domain.BalancedServer;
 import org.jclouds.profitbricks.domain.LoadBalancer;
+import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
+import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.profitbricks.http.parser.balancedserver.BalancedServerResponseHandler;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public class LoadBalancerResponseHandler extends BaseLoadBalancerResponseHandler<LoadBalancer> {
 
+    private final BalancedServerResponseHandler balancedServerResponseHandler;
+    private final List<BalancedServer> balancedServers = Lists.newArrayList();
     private boolean done = false;
+    private boolean useBalancedServerParser = false;
 
     @Inject
-    LoadBalancerResponseHandler(DateCodecFactory dateCodec) {
+    LoadBalancerResponseHandler(DateCodecFactory dateCodec, BalancedServerResponseHandler balancedServerResponseHandler) {
         super(dateCodec);
+        this.balancedServerResponseHandler = balancedServerResponseHandler;
     }
-            
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if ("balancedServers".equals(qName)) {
+            useBalancedServerParser = true;
+        }
+    }
+
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (done)
             return;
-        setPropertyOnEndTag(qName);
-        if ("return".equals(qName))
-            done = true;
-        clearTextBuffer();
+
+        if ("balancedServers".equals(qName)) {
+            useBalancedServerParser = false;
+            balancedServers.add(balancedServerResponseHandler.getResult());
+        }
+        if (useBalancedServerParser) {
+            balancedServerResponseHandler.endElement(uri, localName, qName);
+        } else {
+            setPropertyOnEndTag(qName);
+            if ("return".equals(qName)) {
+                done = true;
+                builder.balancedServers(balancedServers);
+            }
+            clearTextBuffer();
+        }
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) {
+        if (useBalancedServerParser) {
+            balancedServerResponseHandler.characters(ch, start, length);
+        } else {
+            super.characters(ch, start, length);
+        }
     }
 
     @Override

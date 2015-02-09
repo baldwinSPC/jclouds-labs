@@ -58,10 +58,13 @@ public abstract class LoadBalancer {
     @Nullable
     public abstract Date lastModificationTime();
 
+    @Nullable
+    public abstract List<BalancedServer> balancedServers();
+
     public static LoadBalancer create(String loadBalancerId, String loadBalancerName, LoadBalancerAlgorithm loadBalancerAlgorithm,
             String dataCenterId, String dataCenterVersion, boolean internetAccess,
-            String ip, String lanId, ProvisioningState provisioningState, Date creationTime, Date lastModificationTime) {
-        return new AutoValue_LoadBalancer(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime);
+            String ip, String lanId, ProvisioningState provisioningState, Date creationTime, Date lastModificationTime, List<BalancedServer> balancedServers) {
+        return new AutoValue_LoadBalancer(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
     }
 
     public static Builder builder() {
@@ -92,6 +95,8 @@ public abstract class LoadBalancer {
         public Date creationTime;
 
         public Date lastModificationTime;
+
+        public List<BalancedServer> balancedServers;
 
         public Builder loadBalancerId(String loadBalancerId) {
             this.loadBalancerId = loadBalancerId;
@@ -148,14 +153,19 @@ public abstract class LoadBalancer {
             return this;
         }
 
+        public Builder balancedServers(List<BalancedServer> balancedServers) {
+            this.balancedServers = balancedServers;
+            return this;
+        }
+
         public LoadBalancer build() {
-            return LoadBalancer.create(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime);
+            return LoadBalancer.create(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
         }
 
         public Builder fromLoadBalancer(LoadBalancer in) {
             return this.loadBalancerId(in.loadBalancerId()).loadBalancerName(in.loadBalancerName()).loadBalancerAlgorithm(in.loadBalancerAlgorithm())
                     .dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion()).internetAccess(in.internetAccess())
-                    .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime());
+                    .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime()).balancedServers(in.balancedServers());
         }
     }
 
@@ -262,8 +272,8 @@ public abstract class LoadBalancer {
                 }
             }
         }
-        
-         @AutoValue
+
+        @AutoValue
         public abstract static class DeregisterPayload {
 
             public abstract List<String> serverIds();

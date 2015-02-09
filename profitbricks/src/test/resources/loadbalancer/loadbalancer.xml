@@ -12,7 +12,7 @@
                 <ip>ip</ip>
                 <lanId>lan-id</lanId>
                 <balancedServers>
-                    <activate>activate</activate>
+                    <activate>true</activate>
                     <balancedNicId>balanced-nic-id</balancedNicId>
                     <serverId>server-id</serverId>
                     <serverName>server-name</serverName>

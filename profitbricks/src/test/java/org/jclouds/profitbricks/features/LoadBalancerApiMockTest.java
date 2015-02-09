@@ -72,7 +72,8 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(loadBalancer);
             assertEquals(loadBalancer.loadBalancerId(), id);
-        } finally {
+        }
+        finally {
             pbApi.close();
             server.shutdown();
         }
