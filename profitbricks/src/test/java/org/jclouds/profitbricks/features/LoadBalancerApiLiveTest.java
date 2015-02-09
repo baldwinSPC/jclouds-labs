@@ -16,9 +16,17 @@
  */
 package org.jclouds.profitbricks.features;
 
+import com.google.common.collect.Iterables;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.LoadBalancer;
+import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
+import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.util.Predicates2;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
@@ -26,8 +34,34 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "LoadBalancerApiLiveTest")
 public class LoadBalancerApiLiveTest extends BaseProfitBricksLiveTest {
 
+    String dataCenterId;
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
+        assertFalse(dataCenters.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
+
+        DataCenter dataCenter = Iterables.getFirst(dataCenters, null);
+
+        dataCenterId = dataCenter.id();
+    }
+
     @Test
     public void testCreateLoadBalancer() throws Exception {
+        LoadBalancer.Request.CreatePayload payload = LoadBalancer.Request.creatingBuilder()
+                .dataCenterId(dataCenterId)
+                .loadBalancerName("testName")
+                .loadBalancerAlgorithm(LoadBalancerAlgorithm.ROUND_ROBIN)
+                .ip("0.0.0.1")
+                .lanId("1")
+                .serverIds("1,2")
+                .build();
+
+        LoadBalancer loadBalancer = api.loadBalancerApi().createLoadBalancer(payload);
+
+        assertNotNull(loadBalancer);
+
     }
 
     @Test
