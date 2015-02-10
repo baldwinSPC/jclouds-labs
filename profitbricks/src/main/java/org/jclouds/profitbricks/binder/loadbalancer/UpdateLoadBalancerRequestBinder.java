@@ -21,27 +21,24 @@ import org.jclouds.profitbricks.domain.LoadBalancer;
 
 import static java.lang.String.format;
 
-public class CreateLoadBalancerRequestBinder extends BaseProfitBricksRequestBinder<LoadBalancer.Request.CreatePayload> {
+public class UpdateLoadBalancerRequestBinder extends BaseProfitBricksRequestBinder<LoadBalancer.Request.UpdatePayload> {
 
     protected final StringBuilder requestBuilder;
 
-    CreateLoadBalancerRequestBinder() {
+    UpdateLoadBalancerRequestBinder() {
         super("loadbalancer");
         this.requestBuilder = new StringBuilder(128 * 4);
     }
 
     @Override
-    protected String createPayload(LoadBalancer.Request.CreatePayload payload) {
-        requestBuilder.append("<ws:createLoadBalancer>")
+    protected String createPayload(LoadBalancer.Request.UpdatePayload payload) {
+        return requestBuilder.append("<ws:updateLoadBalancer>")
                 .append("<request>")
-                .append(format("<dataCenterId>%s</dataCenterId>", payload.dataCenterId()))
-                .append(format("<loadBalancerName>%s</loadBalancerName>", payload.loadBalancerName()))
-                .append(format("<loadBalancerAlgorithm>%s</loadBalancerAlgorithm>", payload.loadBalancerAlgorithm()))
-                .append(format("<ip>%s</ip>", payload.ip()))
-                .append(format("<lanId>%s</lanId>", payload.lanId()))
-                .append(format("<serverIds>%s</serverIds>", payload.serverIds()))
+                .append(format("<loadBalancerId>%s</loadBalancerId>", payload.loadBalancerId()))
+                .append(formatIfNotEmpty("<loadBalancerName>%s</loadBalancerName>", payload.loadBalancerName()))
+                .append(formatIfNotEmpty("<loadBalancerAlgorithm>%s</loadBalancerAlgorithm>", payload.loadBalancerAlgorithm()))
+                .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
                 .append("</request>")
-                .append("</ws:createLoadBalancer>");
-        return requestBuilder.toString();
+                .append("</ws:updateLoadBalancer>").toString();
     }
 }

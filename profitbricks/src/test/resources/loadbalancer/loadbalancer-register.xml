@@ -4,8 +4,10 @@
     <soapenv:Header />
     <soapenv:Body>
         <ws:registerServersOnLoadBalancer>
+			<request>
                 <serverIds>server-ids</serverIds>
                 <loadBalancerId>load-balancer-id</loadBalancerId>
+			</request>
         </ws:registerServersOnLoadBalancer>
     </soapenv:Body>
 </soapenv:Envelope>

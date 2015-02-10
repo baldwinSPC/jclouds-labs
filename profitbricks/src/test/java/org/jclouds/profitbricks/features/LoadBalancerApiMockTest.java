@@ -162,9 +162,11 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
         LoadBalancerApi api = pbApi.loadBalancerApi();
 
         String content = "<ws:registerServersOnLoadBalancer>"
+                + "<request>"
                 + "<serverIds>1</serverIds>"
                 + "<serverIds>2</serverIds>"
                 + "<loadBalancerId>load-balancer-id</loadBalancerId>"
+                + "</request>"
                 + "</ws:registerServersOnLoadBalancer>";
 
         try {

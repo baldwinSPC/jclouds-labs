@@ -175,6 +175,10 @@ public abstract class LoadBalancer {
             return new CreatePayload.Builder();
         }
 
+        public static UpdatePayload.Builder updatingBuilder() {
+            return new UpdatePayload.Builder();
+        }
+
         @AutoValue
         public abstract static class CreatePayload {
 
@@ -301,6 +305,57 @@ public abstract class LoadBalancer {
 
                 public DeregisterPayload build() {
                     return DeregisterPayload.create(serverIds, loadBalancerId);
+                }
+            }
+        }
+
+        @AutoValue
+        public abstract static class UpdatePayload {
+
+            public abstract String loadBalancerId();
+
+            public abstract String loadBalancerName();
+
+            public abstract LoadBalancerAlgorithm loadBalancerAlgorithm();
+
+            public abstract String ip();
+
+            public static UpdatePayload create(String loadBalancerId, String loadBalancerName, LoadBalancerAlgorithm loadBalancerAlgorithm, String ip) {
+                return new AutoValue_LoadBalancer_Request_UpdatePayload(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, ip);
+            }
+
+            public static class Builder {
+
+                public String loadBalancerId;
+
+                public String loadBalancerName;
+
+                public LoadBalancerAlgorithm loadBalancerAlgorithm;
+
+                public String ip;
+
+                public Builder loadBalancerId(String loadBalancerId) {
+                    this.loadBalancerId = loadBalancerId;
+                    return this;
+                }
+
+                public Builder loadBalancerName(String loadBalancerName) {
+                    this.loadBalancerName = loadBalancerName;
+                    return this;
+                }
+
+                public Builder loadBalancerAlgorithm(LoadBalancerAlgorithm loadBalancerAlgorithm) {
+                    this.loadBalancerAlgorithm = loadBalancerAlgorithm;
+                    return this;
+                }
+
+                public Builder ip(String ip) {
+                    this.ip = ip;
+                    return this;
+                }
+
+                public UpdatePayload build() {
+                    return UpdatePayload.create(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, ip);
                 }
             }
         }

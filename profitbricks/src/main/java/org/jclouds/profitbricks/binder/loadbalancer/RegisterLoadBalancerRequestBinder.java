@@ -31,13 +31,14 @@ public class RegisterLoadBalancerRequestBinder extends BaseProfitBricksRequestBi
 
     @Override
     protected String createPayload(LoadBalancer.Request.RegisterPayload payload) {
-        requestBuilder.append("<ws:registerServersOnLoadBalancer>");
+        requestBuilder.append("<ws:registerServersOnLoadBalancer>").append("<request>");
         for (String s : payload.serverIds()) {
             requestBuilder.append(format("<serverIds>%s</serverIds>", s));
         }
         requestBuilder.append(format("<loadBalancerId>%s</loadBalancerId>", payload.loadBalancerId()))
+                .append("</request>")
                 .append("</ws:registerServersOnLoadBalancer>");
-        
+
         return requestBuilder.toString().replaceAll("\\s+", "");
     }
 }

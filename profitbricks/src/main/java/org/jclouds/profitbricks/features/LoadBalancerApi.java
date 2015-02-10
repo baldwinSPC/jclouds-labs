@@ -27,6 +27,7 @@ import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.loadbalancer.CreateLoadBalancerRequestBinder;
 import org.jclouds.profitbricks.binder.loadbalancer.DeregisterLoadBalancerRequestBinder;
 import org.jclouds.profitbricks.binder.loadbalancer.RegisterLoadBalancerRequestBinder;
+import org.jclouds.profitbricks.binder.loadbalancer.UpdateLoadBalancerRequestBinder;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerListResponseHandler;
@@ -68,17 +69,21 @@ public interface LoadBalancerApi {
     @MapBinder(RegisterLoadBalancerRequestBinder.class)
     @XMLResponseParser(LoadBalancerResponseHandler.class)
     LoadBalancer registerLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.RegisterPayload payload);
-    
+
     @POST
     @Named("loadbalancer:Deregister")
     @MapBinder(DeregisterLoadBalancerRequestBinder.class)
     @XMLResponseParser(LoadBalancerResponseHandler.class)
     LoadBalancer deregisterLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.DeregisterPayload payload);
 
-    
-      @POST
-   @Named( "server:delete" )
-   @Payload( "<loadBalancerId>{id}</loadBalancerId>" )
-   @Fallback( Fallbacks.FalseOnNotFoundOr404.class )
-   boolean deleteLoadbalancer( @PayloadParam( "id" ) String id );
+    @POST
+    @Named("loadbalancer:delete")
+    @Payload("<loadBalancerId>{id}</loadBalancerId>")
+    boolean deleteLoadbalancer(@PayloadParam("id") String id);
+
+    @POST
+    @Named("loadbalancer:update")
+    @MapBinder(UpdateLoadBalancerRequestBinder.class)
+    @XMLResponseParser(LoadBalancerResponseHandler.class)
+    public LoadBalancer updateLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.UpdatePayload payload);
 }
