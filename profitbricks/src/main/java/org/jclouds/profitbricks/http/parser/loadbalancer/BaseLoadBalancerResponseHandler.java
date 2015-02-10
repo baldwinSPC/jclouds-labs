@@ -16,6 +16,8 @@
  */
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
+import java.util.Date;
+import org.jclouds.date.DateCodec;
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
@@ -25,35 +27,41 @@ import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
     protected LoadBalancer.Builder builder;
+    protected final DateCodec dateCodec;
 
     protected BaseLoadBalancerResponseHandler(DateCodecFactory dateCodec) {
-        super(dateCodec);
+        this.dateCodec = dateCodec.iso8601();
         this.builder = LoadBalancer.builder();
+    }
+
+    protected final Date textToIso8601Date() {
+        return dateCodec.toDate(textToStringValue());
     }
 
     @Override
     protected void setPropertyOnEndTag(String qName) {
-        if ("loadBalancerId".equals(qName))
+        if ("loadBalancerId".equals(qName)) {
             builder.loadBalancerId(textToStringValue());
-        else if ("loadBalancerName".equals(qName))
+        } else if ("loadBalancerName".equals(qName)) {
             builder.loadBalancerName(textToStringValue());
-        else if ("loadBalancerAlgorithm".equals(qName))
+        } else if ("loadBalancerAlgorithm".equals(qName)) {
             builder.loadBalancerAlgorithm(LoadBalancerAlgorithm.fromValue(textToStringValue()));
-        else if ("dataCenterId".equals(qName))
+        } else if ("dataCenterId".equals(qName)) {
             builder.dataCenterId(textToStringValue());
-        else if ("dataCenterVersion".equals(qName))
+        } else if ("dataCenterVersion".equals(qName)) {
             builder.dataCenterVersion(textToStringValue());
-        else if ("internetAccess".equals(qName))
+        } else if ("internetAccess".equals(qName)) {
             builder.internetAccess(textToBooleanValue());
-        else if ("ip".equals(qName))
+        } else if ("ip".equals(qName)) {
             builder.ip(textToStringValue());
-        else if ("lanId".equals(qName))
+        } else if ("lanId".equals(qName)) {
             builder.lanId(textToStringValue());
-        else if ("provisioningState".equals(qName))
+        } else if ("provisioningState".equals(qName)) {
             builder.provisioningState(ProvisioningState.fromValue(textToStringValue()));
-        else if ("creationTime".equals(qName))
+        } else if ("creationTime".equals(qName)) {
             builder.creationTime(textToIso8601Date());
-        else if ("lastModificationTime".equals(qName))
+        } else if ("lastModificationTime".equals(qName)) {
             builder.lastModificationTime(textToIso8601Date());
+        }
     }
 }
