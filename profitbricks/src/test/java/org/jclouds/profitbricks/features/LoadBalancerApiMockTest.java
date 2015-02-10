@@ -17,19 +17,17 @@
 package org.jclouds.profitbricks.features;
 
 import com.google.common.collect.Lists;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.AssertJUnit.assertTrue;
-
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+import java.util.List;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 @Test(groups = "unit", testName = "LoadBalancerApiMockTest")
 public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
@@ -72,8 +70,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(loadBalancer);
             assertEquals(loadBalancer.loadBalancerId(), id);
-        }
-        finally {
+        } finally {
             pbApi.close();
             server.shutdown();
         }
@@ -100,8 +97,14 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
 
         try {
 
-            LoadBalancer loadbalancer = api.createLoadBalancer(LoadBalancer.Request.CreatePayload.create("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeeee", "load-balancer-name",
-                    LoadBalancerAlgorithm.ROUND_ROBIN, "-ip", "lan-id", "server-ids"));
+            LoadBalancer loadbalancer = api.createLoadBalancer(LoadBalancer.Request.creatingBuilder()
+                    .dataCenterId("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeeee")
+                    .loadBalancerName("load-balancer-name")
+                    .loadBalancerAlgorithm(LoadBalancerAlgorithm.ROUND_ROBIN)
+                    .ip("-ip")
+                    .lanId("lan-id")
+                    .serverIds("server-ids")
+                    .build());
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
 
@@ -112,30 +115,42 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
     }
 
     @Test
-    public void testDeregisterLoadBalancer() throws Exception {
+    public void testUpdateLoadBalancer() throws Exception {
         MockWebServer server = mockWebServer();
-        server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer-deregister.xml")));
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer-create.xml")));
 
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         LoadBalancerApi api = pbApi.loadBalancerApi();
 
-        String content = "<ws:deregisterServersOnLoadBalancer>"
-                + "<serverIds>1</serverIds>"
-                + "<serverIds>2</serverIds>"
-                + "<loadBalancerId>load-balancer-id</loadBalancerId>"
-                + "</ws:deregisterServersOnLoadBalancer>";
+        String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+        String newName = "Apache";
+
+        String content = "<ws:updateLoadBalancer>"
+                + "<request>"
+                + "<loadBalancerId>" + id + "</loadBalancerId>"
+                + "<loadBalancerName>load-balancer-name</loadBalancerName>"
+                + "<loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>"
+                + "<ip>ip</ip>"
+                + "</request>"
+                + "</ws:updateLoadBalancer>";
 
         try {
-            List<String> serverIds = Lists.newArrayList();
-            serverIds.add("1");
-            serverIds.add("2");
-            LoadBalancer loadbalancer = api.deregisterLoadBalancer(LoadBalancer.Request.DeregisterPayload.create(serverIds, "load-balancer-id"));
+            LoadBalancer.Request.UpdatePayload toUpdate = LoadBalancer.Request.updatingBuilder()
+                    .loadBalancerId(id)
+                    .loadBalancerName("load-balancer-name")
+                    .loadBalancerAlgorithm(LoadBalancerAlgorithm.ROUND_ROBIN)
+                    .ip("ip")
+                    .build();
+
+            LoadBalancer loadBalancer = api.updateLoadBalancer(toUpdate);
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertNotNull(loadBalancer);
         } finally {
             pbApi.close();
             server.shutdown();
         }
+
     }
 
     @Test
@@ -159,6 +174,36 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
             LoadBalancer loadbalancer = api.registerLoadBalancer(LoadBalancer.Request.RegisterPayload.create(serverIds, "load-balancer-id"));
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeregisterLoadBalancer() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/loadbalancer/loadbalancer-update.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        LoadBalancerApi api = pbApi.loadBalancerApi();
+
+        String content = "<ws:deregisterServersOnLoadBalancer>"
+                + "<request>"
+                + "<serverIds>1</serverIds>"
+                + "<serverIds>2</serverIds>"
+                + "<loadBalancerId>load-balancer-id</loadBalancerId>"
+                + "</request>"
+                + "</ws:deregisterServersOnLoadBalancer>";
+
+        try {
+            List<String> serverIds = Lists.newArrayList();
+            serverIds.add("1");
+            serverIds.add("2");
+            LoadBalancer loadbalancer = api.deregisterLoadBalancer(LoadBalancer.Request.DeregisterPayload.create(serverIds, "load-balancer-id"));
+
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertNotNull(loadbalancer);
         } finally {
             pbApi.close();
             server.shutdown();
