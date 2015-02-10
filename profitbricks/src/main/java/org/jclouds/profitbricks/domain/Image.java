@@ -23,7 +23,7 @@ public abstract class Image {
 
    public enum Type {
 
-      HDD, CDROM, UNRECOGNIZED, LoadBalancerAlgorithm;
+      HDD, CDROM, UNRECOGNIZED;
 
       public static Type fromValue(String v) {
          try {
