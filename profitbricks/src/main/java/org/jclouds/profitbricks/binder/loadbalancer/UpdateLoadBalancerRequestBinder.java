@@ -34,8 +34,8 @@ public class UpdateLoadBalancerRequestBinder extends BaseProfitBricksRequestBind
     protected String createPayload(LoadBalancer.Request.UpdatePayload payload) {
         return requestBuilder.append("<ws:updateLoadBalancer>")
                 .append("<request>")
-                .append(format("<loadBalancerId>%s</loadBalancerId>", payload.loadBalancerId()))
-                .append(formatIfNotEmpty("<loadBalancerName>%s</loadBalancerName>", payload.loadBalancerName()))
+                .append(format("<loadBalancerId>%s</loadBalancerId>", payload.id()))
+                .append(formatIfNotEmpty("<loadBalancerName>%s</loadBalancerName>", payload.name()))
                 .append(formatIfNotEmpty("<loadBalancerAlgorithm>%s</loadBalancerAlgorithm>", payload.loadBalancerAlgorithm()))
                 .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
                 .append("</request>")

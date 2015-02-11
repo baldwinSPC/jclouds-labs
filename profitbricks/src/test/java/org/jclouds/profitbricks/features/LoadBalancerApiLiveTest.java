@@ -86,7 +86,7 @@ public class LoadBalancerApiLiveTest extends BaseProfitBricksLiveTest {
         serverIds.add(serverId);
 
         LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.registerBuilder()
-                .loadBalancerId(loadBalancerID)
+                .id(loadBalancerID)
                 .serverIds(serverIds)
                 .build();
 
@@ -101,7 +101,7 @@ public class LoadBalancerApiLiveTest extends BaseProfitBricksLiveTest {
         serverIds.add(serverId);
 
         LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request.deregisterBuilder()
-                .loadBalancerId(loadBalancerID)
+                .id(loadBalancerID)
                 .serverIds(serverIds)
                 .build();
 
@@ -113,7 +113,7 @@ public class LoadBalancerApiLiveTest extends BaseProfitBricksLiveTest {
     @Test
     public void testUpdateLoadBalancer() {
         LoadBalancer.Request.UpdatePayload payload = LoadBalancer.Request.updatingBuilder()
-                .loadBalancerId(loadBalancerID)
+                .id(loadBalancerID)
                 .loadBalancerName("whatever")
                 .build();
 

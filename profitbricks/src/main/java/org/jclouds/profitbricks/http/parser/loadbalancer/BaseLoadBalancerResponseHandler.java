@@ -41,9 +41,9 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
     @Override
     protected void setPropertyOnEndTag(String qName) {
         if ("loadBalancerId".equals(qName)) {
-            builder.loadBalancerId(textToStringValue());
+            builder.id(textToStringValue());
         } else if ("loadBalancerName".equals(qName)) {
-            builder.loadBalancerName(textToStringValue());
+            builder.name(textToStringValue());
         } else if ("loadBalancerAlgorithm".equals(qName)) {
             builder.loadBalancerAlgorithm(LoadBalancerAlgorithm.fromValue(textToStringValue()));
         } else if ("dataCenterId".equals(qName)) {

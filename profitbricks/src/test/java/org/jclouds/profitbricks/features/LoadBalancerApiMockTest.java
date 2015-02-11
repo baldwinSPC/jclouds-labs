@@ -69,7 +69,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(loadBalancer);
-            assertEquals(loadBalancer.loadBalancerId(), id);
+            assertEquals(loadBalancer.id(), id);
         } finally {
             pbApi.close();
             server.shutdown();
@@ -136,7 +136,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
 
         try {
             LoadBalancer.Request.UpdatePayload toUpdate = LoadBalancer.Request.updatingBuilder()
-                    .loadBalancerId(id)
+                    .id(id)
                     .loadBalancerName("load-balancer-name")
                     .loadBalancerAlgorithm(LoadBalancerAlgorithm.ROUND_ROBIN)
                     .ip("ip")
@@ -174,7 +174,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
             serverIds.add("1");
             serverIds.add("2");
             LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.registerBuilder()
-                    .loadBalancerId("1234")
+                    .id("1234")
                     .serverIds(serverIds)
                     .build();
 

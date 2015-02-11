@@ -26,10 +26,10 @@ import java.util.List;
 public abstract class LoadBalancer {
 
     @Nullable
-    public abstract String loadBalancerId();
+    public abstract String id();
 
     @Nullable
-    public abstract String loadBalancerName();
+    public abstract String name();
 
     @Nullable
     public abstract LoadBalancerAlgorithm loadBalancerAlgorithm();
@@ -61,10 +61,10 @@ public abstract class LoadBalancer {
     @Nullable
     public abstract List<BalancedServer> balancedServers();
 
-    public static LoadBalancer create(String loadBalancerId, String loadBalancerName, LoadBalancerAlgorithm loadBalancerAlgorithm,
+    public static LoadBalancer create(String id, String name, LoadBalancerAlgorithm loadBalancerAlgorithm,
             String dataCenterId, String dataCenterVersion, boolean internetAccess,
             String ip, String lanId, ProvisioningState provisioningState, Date creationTime, Date lastModificationTime, List<BalancedServer> balancedServers) {
-        return new AutoValue_LoadBalancer(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
+        return new AutoValue_LoadBalancer(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
     }
 
     public static Builder builder() {
@@ -73,9 +73,9 @@ public abstract class LoadBalancer {
 
     public static class Builder {
 
-        public String loadBalancerId;
+        public String id;
 
-        public String loadBalancerName;
+        public String name;
 
         public LoadBalancerAlgorithm loadBalancerAlgorithm;
 
@@ -98,13 +98,13 @@ public abstract class LoadBalancer {
 
         public List<BalancedServer> balancedServers;
 
-        public Builder loadBalancerId(String loadBalancerId) {
-            this.loadBalancerId = loadBalancerId;
+        public Builder id(String id) {
+            this.id = id;
             return this;
         }
 
-        public Builder loadBalancerName(String loadBalancerName) {
-            this.loadBalancerName = loadBalancerName;
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
@@ -159,11 +159,11 @@ public abstract class LoadBalancer {
         }
 
         public LoadBalancer build() {
-            return LoadBalancer.create(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
+            return LoadBalancer.create(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
         }
 
         public Builder fromLoadBalancer(LoadBalancer in) {
-            return this.loadBalancerId(in.loadBalancerId()).loadBalancerName(in.loadBalancerName()).loadBalancerAlgorithm(in.loadBalancerAlgorithm())
+            return this.id(in.id()).name(in.name()).loadBalancerAlgorithm(in.loadBalancerAlgorithm())
                     .dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion()).internetAccess(in.internetAccess())
                     .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime()).balancedServers(in.balancedServers());
         }
@@ -258,29 +258,29 @@ public abstract class LoadBalancer {
 
             public abstract List<String> serverIds();
 
-            public abstract String loadBalancerId();
+            public abstract String id();
 
-            public static RegisterPayload create(List<String> serverIds, String loadBalancerId) {
-                return new AutoValue_LoadBalancer_Request_RegisterPayload(serverIds, loadBalancerId);
+            public static RegisterPayload create(List<String> serverIds, String id) {
+                return new AutoValue_LoadBalancer_Request_RegisterPayload(serverIds, id);
             }
 
             public static class Builder {
 
                 public List<String> serverIds;
-                public String loadBalancerId;
+                public String id;
 
                 public Builder serverIds(List<String> serverIds) {
                     this.serverIds = serverIds;
                     return this;
                 }
 
-                public Builder loadBalancerId(String loadBalancerId) {
-                    this.loadBalancerId = loadBalancerId;
+                public Builder id(String id) {
+                    this.id = id;
                     return this;
                 }
 
                 public RegisterPayload build() {
-                    return RegisterPayload.create(serverIds, loadBalancerId);
+                    return RegisterPayload.create(serverIds, id);
                 }
             }
         }
@@ -290,29 +290,29 @@ public abstract class LoadBalancer {
 
             public abstract List<String> serverIds();
 
-            public abstract String loadBalancerId();
+            public abstract String id();
 
-            public static DeregisterPayload create(List<String> serverIds, String loadBalancerId) {
-                return new AutoValue_LoadBalancer_Request_DeregisterPayload(serverIds, loadBalancerId);
+            public static DeregisterPayload create(List<String> serverIds, String id) {
+                return new AutoValue_LoadBalancer_Request_DeregisterPayload(serverIds, id);
             }
 
             public static class Builder {
 
                 public List<String> serverIds;
-                public String loadBalancerId;
+                public String id;
 
                 public Builder serverIds(List<String> serverIds) {
                     this.serverIds = serverIds;
                     return this;
                 }
 
-                public Builder loadBalancerId(String loadBalancerId) {
-                    this.loadBalancerId = loadBalancerId;
+                public Builder id(String id) {
+                    this.id = id;
                     return this;
                 }
 
                 public DeregisterPayload build() {
-                    return DeregisterPayload.create(serverIds, loadBalancerId);
+                    return DeregisterPayload.create(serverIds, id);
                 }
             }
         }
@@ -320,35 +320,35 @@ public abstract class LoadBalancer {
         @AutoValue
         public abstract static class UpdatePayload {
 
-            public abstract String loadBalancerId();
+            public abstract String id();
 
-            public abstract String loadBalancerName();
+            public abstract String name();
 
             public abstract LoadBalancerAlgorithm loadBalancerAlgorithm();
 
             public abstract String ip();
 
-            public static UpdatePayload create(String loadBalancerId, String loadBalancerName, LoadBalancerAlgorithm loadBalancerAlgorithm, String ip) {
-                return new AutoValue_LoadBalancer_Request_UpdatePayload(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, ip);
+            public static UpdatePayload create(String id, String name, LoadBalancerAlgorithm loadBalancerAlgorithm, String ip) {
+                return new AutoValue_LoadBalancer_Request_UpdatePayload(id, name, loadBalancerAlgorithm, ip);
             }
 
             public static class Builder {
 
-                public String loadBalancerId;
+                public String id;
 
-                public String loadBalancerName;
+                public String name;
 
                 public LoadBalancerAlgorithm loadBalancerAlgorithm;
 
                 public String ip;
 
-                public Builder loadBalancerId(String loadBalancerId) {
-                    this.loadBalancerId = loadBalancerId;
+                public Builder id(String id) {
+                    this.id = id;
                     return this;
                 }
 
                 public Builder loadBalancerName(String loadBalancerName) {
-                    this.loadBalancerName = loadBalancerName;
+                    this.name = loadBalancerName;
                     return this;
                 }
 
@@ -363,7 +363,7 @@ public abstract class LoadBalancer {
                 }
 
                 public UpdatePayload build() {
-                    return UpdatePayload.create(loadBalancerId, loadBalancerName, loadBalancerAlgorithm, ip);
+                    return UpdatePayload.create(id, name, loadBalancerAlgorithm, ip);
                 }
             }
         }
