@@ -43,8 +43,10 @@ public class RegisterLoadBalancerRequestBinderTest {
 
     private final String expectedPayload
             = ("        <ws:registerServersOnLoadBalancer>\n"
+            + "             <request>"
             + "                <serverIds>1</serverIds>\n"
             + "                <serverIds>2</serverIds>\n"
             + "                <loadBalancerId>load-balancer-id</loadBalancerId>\n"
+            + "             </request>"
             + "        </ws:registerServersOnLoadBalancer>").replaceAll("\\s+", "");
 }
