@@ -173,7 +173,12 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
             List<String> serverIds = Lists.newArrayList();
             serverIds.add("1");
             serverIds.add("2");
-            LoadBalancer loadbalancer = api.registerLoadBalancer(LoadBalancer.Request.RegisterPayload.create(serverIds, "load-balancer-id"));
+            LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.registerBuilder()
+                    .loadBalancerId("1234")
+                    .serverIds(serverIds)
+                    .build();
+
+            LoadBalancer loadbalancer = api.registerLoadBalancer(payload);
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
         } finally {

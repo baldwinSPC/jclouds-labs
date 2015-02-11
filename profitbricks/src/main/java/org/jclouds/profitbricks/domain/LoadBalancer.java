@@ -179,6 +179,14 @@ public abstract class LoadBalancer {
             return new UpdatePayload.Builder();
         }
 
+        public static RegisterPayload.Builder registerBuilder() {
+            return new RegisterPayload.Builder();
+        }
+
+        public static DeregisterPayload.Builder deregisterBuilder() {
+            return new DeregisterPayload.Builder();
+        }
+
         @AutoValue
         public abstract static class CreatePayload {
 

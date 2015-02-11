@@ -18,18 +18,24 @@ package org.jclouds.profitbricks.features;
 
 import com.google.common.collect.Iterables;
 import java.util.List;
+import org.assertj.core.util.Lists;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
+import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.testng.Assert;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "LoadBalancerApiLiveTest")
 public class LoadBalancerApiLiveTest extends BaseProfitBricksLiveTest {
 
-    String dataCenterId;
+    String dataCenterId = "8900ec7a-f39a-430f-9f18-dcf3f381a471";
+    String loadBalancerID = "db2ad881-ef74-4f9c-b681-78b4302f3a14";
+    String serverId = "ce48c54a-3e61-482a-8345-988431893607";
 
     @Override
     protected void initialize() {
@@ -37,33 +43,89 @@ public class LoadBalancerApiLiveTest extends BaseProfitBricksLiveTest {
         List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
         assertFalse(dataCenters.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
 
-        DataCenter dataCenter = Iterables.getFirst(dataCenters, null);
-
-        dataCenterId = dataCenter.id();
+        dataCenterId = Iterables.getFirst(dataCenters, null).id();
     }
 
     @Test
-    public void testCreateLoadBalancer() throws Exception {
+    public void testCreateLoadBalancer() {
         LoadBalancer.Request.CreatePayload payload = LoadBalancer.Request.creatingBuilder()
                 .dataCenterId(dataCenterId)
                 .loadBalancerName("testName")
                 .loadBalancerAlgorithm(LoadBalancerAlgorithm.ROUND_ROBIN)
                 .ip("0.0.0.1")
                 .lanId("1")
-                .serverIds("1,2")
+                .serverIds(serverId)
                 .build();
 
         LoadBalancer loadBalancer = api.loadBalancerApi().createLoadBalancer(payload);
 
+        System.out.println(loadBalancer);
         assertNotNull(loadBalancer);
 
     }
 
     @Test
-    public void testGetAllLoadBalancers() throws Exception {
+    public void testGetAllLoadBalancers() {
         List<LoadBalancer> loadBalancers = api.loadBalancerApi().getAllLoadBalancers();
 
         assertNotNull(loadBalancers);
         assertFalse(loadBalancers.isEmpty());
+    }
+
+    @Test
+    public void testGetLoadBalancer() {
+        LoadBalancer loadBalancer = api.loadBalancerApi().getLoadBalancer(loadBalancerID);
+
+        System.out.println(loadBalancer);
+        assertNotNull(loadBalancer);
+    }
+
+    @Test
+    public void testRegisterLoadBalancer() {
+        List<String> serverIds = Lists.newArrayList();
+        serverIds.add(serverId);
+
+        LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.registerBuilder()
+                .loadBalancerId(loadBalancerID)
+                .serverIds(serverIds)
+                .build();
+
+        LoadBalancer loadBalancer = api.loadBalancerApi().registerLoadBalancer(payload);
+
+        assertNotNull(loadBalancer);
+    }
+
+    @Test
+    public void testDeregisterLoadBalancer() {
+        List<String> serverIds = Lists.newArrayList();
+        serverIds.add(serverId);
+
+        LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request.deregisterBuilder()
+                .loadBalancerId(loadBalancerID)
+                .serverIds(serverIds)
+                .build();
+
+        LoadBalancer loadBalancer = api.loadBalancerApi().deregisterLoadBalancer(payload);
+
+        assertNotNull(loadBalancer);
+    }
+
+    @Test
+    public void testUpdateLoadBalancer() {
+        LoadBalancer.Request.UpdatePayload payload = LoadBalancer.Request.updatingBuilder()
+                .loadBalancerId(loadBalancerID)
+                .loadBalancerName("whatever")
+                .build();
+
+        LoadBalancer loadBalancer = api.loadBalancerApi().updateLoadBalancer(payload);
+
+        assertNotNull(loadBalancer);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testDeleteLoadBalancer() {
+        boolean result = api.loadBalancerApi().deleteLoadbalancer(loadBalancerID);
+
+        Assert.assertTrue(result);
     }
 }
