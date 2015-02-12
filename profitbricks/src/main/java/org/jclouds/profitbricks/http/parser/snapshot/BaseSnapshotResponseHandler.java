@@ -16,6 +16,9 @@
  */
 package org.jclouds.profitbricks.http.parser.snapshot;
 
+import java.util.Date;
+import org.jclouds.date.DateCodec;
+import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
@@ -26,10 +29,18 @@ public abstract class BaseSnapshotResponseHandler<T> extends BaseProfitBricksRes
 
     protected Snapshot.Builder builder;
 
-    BaseSnapshotResponseHandler() {
+    protected final DateCodec dateCodec;
+
+    BaseSnapshotResponseHandler(DateCodecFactory dateCodec) {
+        this.dateCodec = dateCodec.iso8601();
         this.builder = Snapshot.builder();
     }
 
+    
+    protected final Date textToIso8601Date() {
+        return dateCodec.toDate(textToStringValue());
+    }
+    
     @Override
     protected void setPropertyOnEndTag(String qName) {
         if ("snapshotId".equals(qName)) {
@@ -64,6 +75,10 @@ public abstract class BaseSnapshotResponseHandler<T> extends BaseProfitBricksRes
             builder.discVirtioHotUnPlug(textToBooleanValue());
         } else if ("provisioningState".equals(qName)) {
             builder.state(ProvisioningState.fromValue(textToStringValue()));
+        } else if ("creationTimestamp".equals(qName)) {
+            builder.creationTime(textToIso8601Date());
+        } else if ("modificationTimestamp".equals(qName)) {
+            builder.lastModificationTime(textToIso8601Date());
         }
     }
 
