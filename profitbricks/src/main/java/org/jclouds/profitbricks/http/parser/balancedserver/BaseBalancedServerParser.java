@@ -20,7 +20,6 @@ import org.jclouds.date.DateCodec;
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.BalancedServer;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
-import org.xml.sax.SAXException;
 
 public abstract class BaseBalancedServerParser<T> extends BaseProfitBricksResponseHandler<T> {
 

@@ -23,7 +23,6 @@ import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
-import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.testng.Assert;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;

@@ -85,5 +85,5 @@ public interface LoadBalancerApi {
     @Named("loadbalancer:update")
     @MapBinder(UpdateLoadBalancerRequestBinder.class)
     @XMLResponseParser(LoadBalancerResponseHandler.class)
-    public LoadBalancer updateLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.UpdatePayload payload);
+    LoadBalancer updateLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.UpdatePayload payload);
 }
