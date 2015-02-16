@@ -23,14 +23,16 @@ import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.xml.sax.SAXException;
 
 import java.util.List;
+import org.jclouds.profitbricks.http.parser.balancedserver.BalancedServerResponseHandler;
+import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 
 public class LoadBalancerListResponseHandler extends BaseLoadBalancerResponseHandler<List<LoadBalancer>> {
 
     private final List<LoadBalancer> loadBalancers;
 
     @Inject
-    protected LoadBalancerListResponseHandler(DateCodecFactory dateCodec) {
-        super(dateCodec);
+    protected LoadBalancerListResponseHandler(DateCodecFactory dateCodec, BalancedServerResponseHandler balancedServerResponseHandler, FirewallResponseHandler firewallResponseHandler) {
+        super(dateCodec, balancedServerResponseHandler, firewallResponseHandler);
         this.loadBalancers = Lists.newArrayList();
     }
 
