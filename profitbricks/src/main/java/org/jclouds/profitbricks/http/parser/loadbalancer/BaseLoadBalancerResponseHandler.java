@@ -16,22 +16,64 @@
  */
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
+import com.google.common.collect.Lists;
 import java.util.Date;
+import java.util.List;
 import org.jclouds.date.DateCodec;
 import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.domain.BalancedServer;
+import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancerAlgorithm;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
+import org.jclouds.profitbricks.http.parser.balancedserver.BalancedServerResponseHandler;
+import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
+
+    protected final BalancedServerResponseHandler balancedServerResponseHandler;
+    protected final FirewallResponseHandler firewallResponseHandler;
+    protected final List<BalancedServer> balancedServers;
+    protected final List<Firewall> firewalls;
 
     protected LoadBalancer.Builder builder;
     protected final DateCodec dateCodec;
 
-    protected BaseLoadBalancerResponseHandler(DateCodecFactory dateCodec) {
+    protected boolean useBalancedServerParser = false;
+    protected boolean useFirewallParser = false;
+
+    protected BaseLoadBalancerResponseHandler(DateCodecFactory dateCodec, BalancedServerResponseHandler balancedServerResponseHandler, FirewallResponseHandler firewallResponseHandler) {
         this.dateCodec = dateCodec.iso8601();
         this.builder = LoadBalancer.builder();
+
+        this.balancedServerResponseHandler = balancedServerResponseHandler;
+        this.firewallResponseHandler = firewallResponseHandler;
+
+        this.balancedServers = Lists.newArrayList();
+        this.firewalls = Lists.newArrayList();
+    }
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if ("balancedServers".equals(qName)) {
+            useBalancedServerParser = true;
+        } else if ("firewall".equals(qName)) {
+            useFirewallParser = true;
+        }
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) {
+        if (useBalancedServerParser) {
+            balancedServerResponseHandler.characters(ch, start, length);
+        } else if (useFirewallParser) {
+            firewallResponseHandler.characters(ch, start, length);
+        } else {
+            super.characters(ch, start, length);
+        }
     }
 
     protected final Date textToIso8601Date() {

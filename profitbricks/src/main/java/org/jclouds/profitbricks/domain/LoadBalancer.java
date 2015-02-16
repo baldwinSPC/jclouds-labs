@@ -61,10 +61,13 @@ public abstract class LoadBalancer {
     @Nullable
     public abstract List<BalancedServer> balancedServers();
 
+    @Nullable
+    public abstract List<Firewall> firewalls();
+
     public static LoadBalancer create(String id, String name, LoadBalancerAlgorithm loadBalancerAlgorithm,
             String dataCenterId, String dataCenterVersion, boolean internetAccess,
-            String ip, String lanId, ProvisioningState provisioningState, Date creationTime, Date lastModificationTime, List<BalancedServer> balancedServers) {
-        return new AutoValue_LoadBalancer(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
+            String ip, String lanId, ProvisioningState provisioningState, Date creationTime, Date lastModificationTime, List<BalancedServer> balancedServers, List<Firewall> firewalls) {
+        return new AutoValue_LoadBalancer(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers, firewalls);
     }
 
     public static Builder builder() {
@@ -97,6 +100,8 @@ public abstract class LoadBalancer {
         public Date lastModificationTime;
 
         public List<BalancedServer> balancedServers;
+
+        public List<Firewall> firewalls;
 
         public Builder id(String id) {
             this.id = id;
@@ -158,14 +163,19 @@ public abstract class LoadBalancer {
             return this;
         }
 
+        public Builder firewalls(List<Firewall> firewalls) {
+            this.firewalls = firewalls;
+            return this;
+        }
+
         public LoadBalancer build() {
-            return LoadBalancer.create(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers);
+            return LoadBalancer.create(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, provisioningState, creationTime, lastModificationTime, balancedServers, firewalls);
         }
 
         public Builder fromLoadBalancer(LoadBalancer in) {
             return this.id(in.id()).name(in.name()).loadBalancerAlgorithm(in.loadBalancerAlgorithm())
                     .dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion()).internetAccess(in.internetAccess())
-                    .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime()).balancedServers(in.balancedServers());
+                    .ip(in.ip()).lanId(in.lanId()).provisioningState(in.provisioningState()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime()).balancedServers(in.balancedServers()).firewalls(in.firewalls());
         }
     }
 
