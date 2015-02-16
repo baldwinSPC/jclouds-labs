@@ -163,9 +163,9 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
 
         String content = "<ws:registerServersOnLoadBalancer>"
                 + "<request>"
+                + "<loadBalancerId>1234</loadBalancerId>"
                 + "<serverIds>1</serverIds>"
                 + "<serverIds>2</serverIds>"
-                + "<loadBalancerId>load-balancer-id</loadBalancerId>"
                 + "</request>"
                 + "</ws:registerServersOnLoadBalancer>";
 
@@ -227,7 +227,7 @@ public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
 
         String loadBalancerId = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
 
-        String content = "<loadBalancerId>" + loadBalancerId + "</loadBalancerId>";
+        String content = "<ws:deleteLoadBalancer><loadBalancerId>" + loadBalancerId + "</loadBalancerId></ws:deleteLoadBalancer>";
 
         try {
             boolean done = api.deleteLoadbalancer(loadBalancerId);
