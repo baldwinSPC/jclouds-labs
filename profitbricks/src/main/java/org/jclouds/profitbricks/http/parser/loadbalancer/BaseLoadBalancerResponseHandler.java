@@ -60,7 +60,8 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if ("balancedServers".equals(qName)) {
             useBalancedServerParser = true;
-        } else if ("firewall".equals(qName)) {
+        }
+        if ("firewall".equals(qName)) {
             useFirewallParser = true;
         }
     }
@@ -69,7 +70,8 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
     public void characters(char[] ch, int start, int length) {
         if (useBalancedServerParser) {
             balancedServerResponseHandler.characters(ch, start, length);
-        } else if (useFirewallParser) {
+        }
+        if (useFirewallParser) {
             firewallResponseHandler.characters(ch, start, length);
         } else {
             super.characters(ch, start, length);

@@ -23,7 +23,8 @@ import org.jclouds.javax.annotation.Nullable;
 @AutoValue
 public abstract class Firewall {
 
-    public abstract String id();
+     @Nullable
+   public abstract String id();
 
     @Nullable
     public abstract String nicId();

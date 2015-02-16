@@ -38,12 +38,31 @@ public class LoadBalancerListResponseHandler extends BaseLoadBalancerResponseHan
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        setPropertyOnEndTag(qName);
-        if ("return".equals(qName)) {
-            loadBalancers.add(builder.build());
-            builder = LoadBalancer.builder();
+
+        if ("firewall".equals(qName)) {
+            useFirewallParser = false;
+            firewalls.add(firewallResponseHandler.getResult());
+        } else if ("balancedServers".equals(qName)) {
+            useBalancedServerParser = false;
+            balancedServers.add(balancedServerResponseHandler.getResult());
         }
-        clearTextBuffer();
+
+        setPropertyOnEndTag(qName);
+        
+        if (useBalancedServerParser) {
+            balancedServerResponseHandler.endDocument();
+        } else if (useFirewallParser) {
+            firewallResponseHandler.endDocument();
+        } else {
+            if ("return".equals(qName)) {
+                loadBalancers.add(builder
+                        .firewalls(firewalls)
+                        .balancedServers(balancedServers)
+                        .build());
+                builder = LoadBalancer.builder();
+            }
+            clearTextBuffer();
+        }
     }
 
     @Override

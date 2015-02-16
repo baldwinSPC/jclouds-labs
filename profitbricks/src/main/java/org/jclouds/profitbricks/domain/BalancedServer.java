@@ -17,6 +17,7 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
 public abstract class BalancedServer {
@@ -24,21 +25,26 @@ public abstract class BalancedServer {
     /*
      * An attribute in the balancedServers list. It denotes if the server is active or not.
      */
+    @Nullable
     public abstract boolean activate();
     /*
      * The NIC ID associated with the load balancer.
      */
 
+    @Nullable
     public abstract String balancedNicId();
     /*
      * The ID of the server being load balanced.
      */
+
+    @Nullable
 
     public abstract String serverId();
 
     /*
      * The name of the load balanced server.
      */
+    @Nullable
     public abstract String serverName();
 
     public static BalancedServer create(boolean activate, String blanacedNicId, String serverId, String serverName) {
