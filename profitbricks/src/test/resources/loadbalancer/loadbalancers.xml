@@ -6,7 +6,7 @@
                 <dataCenterId>datacenter-id</dataCenterId>
                 <dataCenterVersion>datacenter-version</dataCenterVersion>
                 <loadBalancerId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</loadBalancerId>
-                <loadBalancerName>load-balancer-name</loadBalancerName>
+                <loadBalancerName>load-1234567890-name</loadBalancerName>
                 <loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>
                 <internetAccess>true</internetAccess>
                 <ip>ip</ip>

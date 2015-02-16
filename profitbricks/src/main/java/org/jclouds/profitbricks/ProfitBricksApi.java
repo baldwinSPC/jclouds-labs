@@ -51,4 +51,7 @@ public interface ProfitBricksApi extends Closeable {
 
     @Delegate
     FirewallApi firewallApi();
+
+    @Delegate
+    LoadBalancerApi loadBalancerApi();
 }
