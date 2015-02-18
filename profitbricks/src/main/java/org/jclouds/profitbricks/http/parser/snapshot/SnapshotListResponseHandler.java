@@ -29,8 +29,7 @@ public class SnapshotListResponseHandler extends BaseSnapshotResponseHandler<Lis
     private final List<Snapshot> snapshots;
 
     @Inject
-    SnapshotListResponseHandler(DateCodecFactory dateCodec) {
-        super(dateCodec);
+    SnapshotListResponseHandler() {
         this.snapshots = Lists.newArrayList();
     }
 
